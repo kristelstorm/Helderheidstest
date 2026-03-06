@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoe helder voel jij je? - Kristaelhelder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8F4F8 0%, #D4E8ED 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+ 
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+ 
+        .header {
+            background: linear-gradient(135deg, #5AB5C9 0%, #4A9FB0 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+ 
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+ 
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+ 
+        .content {
+            padding: 40px 30px;
+        }
+ 
+        .intro {
+            background: #F0F8FA;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #5AB5C9;
+        }
+ 
+        .intro p {
+            color: #333;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+ 
+        .category {
+            margin-bottom: 40px;
+            border-bottom: 2px solid #E8F4F8;
+            padding-bottom: 30px;
+        }
+ 
+        .category:last-of-type {
+            border-bottom: none;
+        }
+ 
+        .category-title {
+            color: #4A9FB0;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+ 
+        .category-icon {
+            width: 35px;
+            height: 35px;
+            background: #5AB5C9;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-weight: bold;
+        }
+ 
+        .question {
+            margin-bottom: 35px;
+            background: #FAFCFD;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #E8F4F8;
+        }
+ 
+        .question-text {
+            color: #2C3E50;
+            font-size: 1.05em;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+ 
+        .scale-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+ 
+        .scale-label {
+            font-size: 0.85em;
+            color: #666;
+            min-width: 120px;
+            display: none;
+        }
+ 
+        .scale-numbers {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+ 
+        .scale-button {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #D4E8ED;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: 500;
+            color: #4A9FB0;
+        }
+ 
+        .scale-button:hover {
+            border-color: #5AB5C9;
+            background: #F0F8FA;
+            transform: translateY(-2px);
+        }
+ 
+        .scale-button.selected {
+            background: #5AB5C9;
+            border-color: #5AB5C9;
+            color: white;
+            transform: scale(1.1);
+        }
+ 
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+ 
+        .submit-button {
+            background: linear-gradient(135deg, #5AB5C9 0%, #4A9FB0 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(90, 181, 201, 0.3);
+            font-weight: 500;
+        }
+ 
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(90, 181, 201, 0.4);
+        }
+ 
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+ 
+        .results {
+            display: none;
+        }
+ 
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+ 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .result-header {
+            text-align: center;
+            margin-bottom: 35px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #5AB5C9;
+            box-shadow: 0 4px 15px rgba(90, 181, 201, 0.15);
+        }
+ 
+        .result-header h2 {
+            color: #4A9FB0;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+ 
+        .overall-score {
+            background: linear-gradient(135deg, #5AB5C9 0%, #4A9FB0 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+ 
+        .overall-score .score-value {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+ 
+        .overall-score .score-label {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+ 
+        .category-result {
+            background: #F0F8FA;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #5AB5C9;
+        }
+ 
+        .category-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+ 
+        .category-result-name {
+            font-size: 1.2em;
+            color: #4A9FB0;
+            font-weight: 500;
+        }
+ 
+        .category-result-score {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #5AB5C9;
+        }
+ 
+        .progress-bar {
+            height: 12px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+ 
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5AB5C9 0%, #4A9FB0 100%);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+ 
+        .interpretation {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #E8F4F8;
+        }
+ 
+        .interpretation h3 {
+            color: #4A9FB0;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+ 
+        .interpretation p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+ 
+        .email-capture {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 2px solid #5AB5C9;
+            box-shadow: 0 4px 15px rgba(90, 181, 201, 0.15);
+        }
+ 
+        .email-capture h3 {
+            color: #4A9FB0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+ 
+        .email-capture p {
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: center;
+        }
+ 
+        .email-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+ 
+        .form-group {
+            margin-bottom: 20px;
+        }
+ 
+        .form-group label {
+            display: block;
+            color: #4A9FB0;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+ 
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #D4E8ED;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+ 
+        .form-group input:focus {
+            outline: none;
+            border-color: #5AB5C9;
+        }
+ 
+        .submit-email-button {
+            background: linear-gradient(135deg, #5AB5C9 0%, #4A9FB0 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(90, 181, 201, 0.3);
+            font-weight: 500;
+            width: 100%;
+        }
+ 
+        .submit-email-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(90, 181, 201, 0.4);
+        }
+ 
+        .form-success {
+            display: none;
+            background: #E8F9F0;
+            border: 2px solid #5AB5C9;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #2C7A4A;
+            margin-top: 20px;
+        }
+ 
+        .form-success.show {
+            display: block;
+        }
+ 
+        .cta {
+            background: linear-gradient(135deg, #E8F4F8 0%, #D4E8ED 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+ 
+        .cta h3 {
+            color: #4A9FB0;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+ 
+        .cta p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+ 
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #5AB5C9 0%, #4A9FB0 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(90, 181, 201, 0.3);
+        }
+ 
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(90, 181, 201, 0.4);
+        }
+ 
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            border-top: 1px solid #E8F4F8;
+        }
+ 
+        .logo {
+            max-width: 200px;
+            margin: 20px auto;
+        }
+ 
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.6em;
+            }
+ 
+            .scale-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+ 
+            .scale-numbers {
+                justify-content: space-between;
+            }
+ 
+            .scale-button {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9em;
+            }
+ 
+            .overall-score .score-value {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hoe helder voel jij je?</h1>
+            <p>Ontdek in 2 minuten hoe helder je je mentaal, emotioneel en fysiek voelt</p>
+        </div>
+ 
+        <div class="content">
+            <div id="test-section">
+                <div class="intro">
+                    <p><strong>Omdat zorgen iets moois is... zolang je jezelf niet vergeet.</strong></p>
+                    <p>Deze korte zelfscan helpt je inzicht krijgen in hoe helder je je op dit moment voelt. Beantwoord de vragen zo eerlijk mogelijk op een schaal van 1 (helemaal niet) tot 10 (helemaal wel).</p>
+                </div>
+ 
+                <form id="helderheidstest">
+                    <!-- Categorie 1: Mentale Helderheid -->
+                    <div class="category">
+                        <h2 class="category-title">
+                            <span class="category-icon">1</span>
+                            Mentale Helderheid
+                        </h2>
+                        
+                        <div class="question">
+                            <div class="question-text">Ik kan me goed concentreren en heb een helder overzicht van mijn taken en prioriteiten.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="m1" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="m1" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Mijn hoofd voelt rustig aan, zonder constant gepieker of malende gedachten.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="m2" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="m2" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Ik kan goed beslissingen nemen zonder eindeloos te twijfelen.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="m3" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="m3" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Categorie 2: Emotionele Balans -->
+                    <div class="category">
+                        <h2 class="category-title">
+                            <span class="category-icon">2</span>
+                            Emotionele Balans
+                        </h2>
+                        
+                        <div class="question">
+                            <div class="question-text">Ik voel me emotioneel stabiel en niet snel overweldigd door gevoelens.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="e1" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="e1" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Ik voel innerlijke rust en vrede, zelfs als het druk is om me heen.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="e2" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="e2" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Ik kan mijn gevoelens goed herkennen en benoemen.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="e3" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="e3" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Categorie 3: Lichamelijke Energie -->
+                    <div class="category">
+                        <h2 class="category-title">
+                            <span class="category-icon">3</span>
+                            Lichamelijke Energie
+                        </h2>
+                        
+                        <div class="question">
+                            <div class="question-text">Ik voel me energiek en uitgerust, niet constant moe of uitgeput.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="l1" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="l1" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Mijn lichaam voelt ontspannen aan, zonder veel spanning in schouders, nek of kaak.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="l2" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="l2" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Ik slaap goed en word uitgerust wakker.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="l3" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="l3" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Categorie 4: Innerlijke Kracht -->
+                    <div class="category">
+                        <h2 class="category-title">
+                            <span class="category-icon">4</span>
+                            Innerlijke Kracht
+                        </h2>
+                        
+                        <div class="question">
+                            <div class="question-text">Ik durf 'nee' te zeggen en grenzen aan te geven waar nodig.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="k1" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="k1" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Ik voel me zelfverzekerd en sta achter mijn keuzes.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="k2" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="k2" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+ 
+                        <div class="question">
+                            <div class="question-text">Ik zorg goed voor mezelf en vergeet mezelf niet in de zorg voor anderen.</div>
+                            <div class="scale-container">
+                                
+                                <div class="scale-numbers">
+                                    <button type="button" class="scale-button" data-question="k3" data-value="1">1</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="2">2</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="3">3</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="4">4</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="5">5</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="6">6</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="7">7</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="8">8</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="9">9</button>
+                                    <button type="button" class="scale-button" data-question="k3" data-value="10">10</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="submit-container">
+                        <button type="submit" class="submit-button" id="submitBtn">Bekijk mijn resultaat</button>
+                    </div>
+                </form>
+            </div>
+ 
+            <div id="results" class="results">
+                <div class="result-header">
+                    <h2>Jouw Helderheidsresultaat</h2>
+                </div>
+ 
+                <div class="overall-score">
+                    <div class="score-label">Jouw totale helderheidsscore</div>
+                    <div class="score-value" id="totalScore">-</div>
+                    <div class="score-label">van de 10</div>
+                </div>
+ 
+                <div id="categoryResults"></div>
+ 
+                <div class="interpretation" id="interpretation"></div>
+ 
+                <div class="email-capture">
+                    <h3>Wil je meer helderheid?</h3>
+                    <p>Ontvang 3 PRI-tips per mail om helderder te worden, afgestemd op jouw resultaat.</p>
+                    
+                    <form id="emailForm" class="email-form" action="https://formspree.io/f/mgonezrg" method="POST">
+                        <input type="hidden" name="score" id="formScore" value="">
+                        <input type="hidden" name="mental_score" id="formMentalScore" value="">
+                        <input type="hidden" name="emotional_score" id="formEmotionalScore" value="">
+                        <input type="hidden" name="physical_score" id="formPhysicalScore" value="">
+                        <input type="hidden" name="strength_score" id="formStrengthScore" value="">
+                        
+                        <div class="form-group">
+                            <label for="userName">Naam</label>
+                            <input type="text" id="userName" name="naam" required placeholder="Je naam">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="userEmail">E-mailadres</label>
+                            <input type="email" id="userEmail" name="email" required placeholder="je@email.nl">
+                        </div>
+                        
+                        <button type="submit" class="submit-email-button">Stuur mij de tips</button>
+                    </form>
+                    
+                    <div class="form-success" id="formSuccess">
+                        <strong>✓ Bedankt!</strong><br>
+                        Check je inbox voor 3 tips om helderder te worden.
+                    </div>
+                </div>
+ 
+                <div class="cta">
+                    <h3>Meer helderheid in je leven?</h3>
+                    <p>In mijn praktijk Kristaelhelder help ik je om weer ruimte, rust en helderheid te vinden, zodat zorgen niet langer ten koste gaan van jou.</p>
+                    <p style="margin-top: 20px; font-size: 0.95em;">
+                        <strong>Kristel van der Klugt</strong><br>
+                        06-15058933<br>
+                        info@kristaelhelder.nl<br>
+                        www.kristaelhelder.nl
+                    </p>
+                </div>
+            </div>
+ 
+            <div class="footer">
+                <p>&copy; 2026 Kristaelhelder - Helder voelen, stralend leven!</p>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        const answers = {};
+        const categories = {
+            mental: { name: 'Mentale Helderheid', questions: ['m1', 'm2', 'm3'] },
+            emotional: { name: 'Emotionele Balans', questions: ['e1', 'e2', 'e3'] },
+            physical: { name: 'Lichamelijke Energie', questions: ['l1', 'l2', 'l3'] },
+            strength: { name: 'Innerlijke Kracht', questions: ['k1', 'k2', 'k3'] }
+        };
+ 
+        // Handle scale button clicks
+        document.querySelectorAll('.scale-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const question = this.dataset.question;
+                const value = parseInt(this.dataset.value);
+                
+                // Remove selected class from all buttons in this question
+                document.querySelectorAll(`[data-question="${question}"]`).forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked button
+                this.classList.add('selected');
+                
+                // Store answer
+                answers[question] = value;
+                
+                // Enable submit button if all questions answered
+                checkComplete();
+            });
+        });
+ 
+        function checkComplete() {
+            const allQuestions = Object.values(categories).flatMap(cat => cat.questions);
+            const allAnswered = allQuestions.every(q => answers[q] !== undefined);
+            
+            document.getElementById('submitBtn').disabled = !allAnswered;
+        }
+ 
+        // Handle form submission
+        document.getElementById('helderheidstest').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateResults();
+        });
+ 
+        function calculateResults() {
+            // Calculate category scores
+            const categoryScores = {};
+            let totalSum = 0;
+            let totalQuestions = 0;
+ 
+            Object.keys(categories).forEach(catKey => {
+                const cat = categories[catKey];
+                const sum = cat.questions.reduce((acc, q) => acc + answers[q], 0);
+                const avg = sum / cat.questions.length;
+                categoryScores[catKey] = {
+                    name: cat.name,
+                    score: avg.toFixed(1),
+                    percentage: (avg / 10) * 100
+                };
+                totalSum += sum;
+                totalQuestions += cat.questions.length;
+            });
+ 
+            const totalScore = (totalSum / totalQuestions).toFixed(1);
+ 
+            // Display results
+            displayResults(totalScore, categoryScores);
+        }
+ 
+        function displayResults(totalScore, categoryScores) {
+            // Hide test, show results
+            document.getElementById('test-section').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+ 
+            // Set total score
+            document.getElementById('totalScore').textContent = totalScore;
+ 
+            // Display category results
+            const categoryResultsDiv = document.getElementById('categoryResults');
+            categoryResultsDiv.innerHTML = '';
+ 
+            Object.values(categoryScores).forEach(cat => {
+                const div = document.createElement('div');
+                div.className = 'category-result';
+                div.innerHTML = `
+                    <div class="category-result-header">
+                        <span class="category-result-name">${cat.name}</span>
+                        <span class="category-result-score">${cat.score}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${cat.percentage}%"></div>
+                    </div>
+                `;
+                categoryResultsDiv.appendChild(div);
+            });
+ 
+            // Generate interpretation
+            const interpretationDiv = document.getElementById('interpretation');
+            interpretationDiv.innerHTML = generateInterpretation(totalScore, categoryScores);
+ 
+            // Fill hidden form fields with scores
+            document.getElementById('formScore').value = totalScore;
+            document.getElementById('formMentalScore').value = categoryScores.mental.score;
+            document.getElementById('formEmotionalScore').value = categoryScores.emotional.score;
+            document.getElementById('formPhysicalScore').value = categoryScores.physical.score;
+            document.getElementById('formStrengthScore').value = categoryScores.strength.score;
+ 
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+ 
+        // Handle email form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailForm = document.getElementById('emailForm');
+            if (emailForm) {
+                emailForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(emailForm);
+                    
+                    try {
+                        const response = await fetch(emailForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            emailForm.style.display = 'none';
+                            document.getElementById('formSuccess').classList.add('show');
+                        } else {
+                            alert('Er ging iets mis. Probeer het opnieuw of neem direct contact op via info@kristaelhelder.nl');
+                        }
+                    } catch (error) {
+                        alert('Er ging iets mis. Probeer het opnieuw of neem direct contact op via info@kristaelhelder.nl');
+                    }
+                });
+            }
+        });
+ 
+        function generateInterpretation(totalScore, categoryScores) {
+            const score = parseFloat(totalScore);
+            let interpretation = '<h3>Wat betekent dit?</h3>';
+ 
+            if (score >= 8) {
+                interpretation += '<p><strong>Kristalhelder!</strong> Je voelt je helder en in balans. Je hebt een goed contact met jezelf en weet goed wat je nodig hebt. Blijf deze helderheid koesteren en zorg goed voor jezelf.</p>';
+            } else if (score >= 6) {
+                interpretation += '<p><strong>Redelijk helder</strong> Je functioneert goed, maar er zijn momenten waarop je je minder helder voelt. Er is ruimte voor verbetering op bepaalde gebieden.</p>';
+            } else if (score >= 4) {
+                interpretation += '<p><strong>Wazig</strong> Je voelt regelmatig onrust, vermoeidheid of onduidelijkheid. Het lijkt erop dat zorgen voor jezelf soms lastig is tussen alle andere verantwoordelijkheden door.</p>';
+            } else {
+                interpretation += '<p><strong>Troebel</strong> Je voelt je vaak overweldigd, uitgeput of verward. De mist is dik en het is moeilijk om helder te zien wat je nodig hebt. Dit is een signaal dat je toe bent aan ondersteuning.</p>';
+            }
+ 
+            // Find lowest scoring category
+            let lowestCat = null;
+            let lowestScore = 10;
+            Object.entries(categoryScores).forEach(([key, cat]) => {
+                if (parseFloat(cat.score) < lowestScore) {
+                    lowestScore = parseFloat(cat.score);
+                    lowestCat = cat.name;
+                }
+            });
+ 
+            if (lowestScore < 6) {
+                interpretation += `<p>Je scoort het laagst op <strong>${lowestCat}</strong>. Dit is een mooi aangrijpingspunt om mee aan de slag te gaan.</p>`;
+            }
+ 
+            interpretation 
